@@ -14,7 +14,7 @@
 void *philosopher(void *id);
 void grab_fork(int, int, char *);
 void down_forks(int, int);
-int food_on_table();
+int food_on_table(int philosopher_id);
 
 pthread_mutex_t forks[N_FORKS];
 pthread_t philosophers[N_PHILOSOPHERS];
@@ -27,9 +27,6 @@ int sleep_seconds = 0;
 int main(int argc, char **argv)
 {
 	int i;
-
-	if (argc == 2)
-		sleep_seconds = atoi(argv[1]);
 
 	// Serve pra tornar o ato de "pegar os garfos" atômico
 	// Ou seja, ou pega os dois garfos ou não pega nenhum
@@ -61,22 +58,8 @@ void *philosopher(void *num)
 	left_fork = (id + 1) % N_PHILOSOPHERS;
 
 	int remaining_cookies;
-	while (remaining_cookies = food_on_table())
+	while (remaining_cookies = food_on_table(id))
 	{
-
-		/* Thanks to philosophers #1 who would like to take a nap
-		 * before picking up the chopsticks, the other philosophers
-		 * may be able to eat their dishes and not deadlock.
-		 */
-
-		/*
-			Não influencia na execução das rotinas de cada thread ou no
-			impedimento de deadlocks, apenas escolhe uma thread e simplesmente
-			atrasa o seu acesso às regiões criticas.
-			if (id == 1)
-				sleep(sleep_seconds);
-		*/
-
 		grab_fork(id, right_fork, "right");
 		grab_fork(id, left_fork, "left");
 
@@ -88,19 +71,27 @@ void *philosopher(void *num)
 	}
 
 	printf ("Philosopher %d: is done eating.\n", id);
-	return (NULL);
 }
 
-int food_on_table()
+int food_on_table(int philosopher_id)
 {
 	static int remaining_cookies = COOKIES_ON_PLATE;
 
 	pthread_mutex_lock(&food_lock);
 
 	// Tá comendo
-	if (remaining_cookies > 0)
+	if (remaining_cookies > 0){
 		remaining_cookies--;
+		printf("Philosopher %d: get your food, %d remaining cookies.\n", philosopher_id, remaining_cookies);
+	}
 
+	//Caso os biscoitos acabem eu preciso destravar o food_lock
+	//Do contrário, os filósofos que estavam na fila pra tentar comer jamais entrariam
+	//no while para dar unlock (em philosopher()), assim a execução entraria em deadlock
+	//pois existiria threads que jamais sairiam de sua rotina esperando o unlock
+	if(!remaining_cookies)
+		pthread_mutex_unlock(&food_lock);
+	
 	return remaining_cookies;
 }
 
