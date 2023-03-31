@@ -5,18 +5,19 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #define N_PHILOSOPHERS 5
-#define N_hashiS 5
+#define N_HASHIS 5
 #define DELAY 5000
 #define SUSHIS_ON_PLATE 10
 
 void *philosopher(void *id);
 void grab_hashi(int, int, char *);
 void down_hashis(int, int);
-int food_on_table(int philosopher_id);
+int eat_and_return_remaining_sushis_on_table(int philosopher_id);
 
-pthread_mutex_t hashis[N_hashiS];
+pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
 pthread_mutex_t food_lock;
 int sleep_seconds = 0;
@@ -33,7 +34,7 @@ int main(int argc, char **argv)
 	pthread_mutex_init(&food_lock, NULL);
 
 	// Inicializa os garfos
-	for (i = 0; i < N_hashiS; i++)
+	for (i = 0; i < N_HASHIS; i++)
 		pthread_mutex_init(&hashis[i], NULL);
 
 	// Inicializa os filósofos
@@ -57,8 +58,9 @@ void *philosopher(void *num)
 	right_hashi = id;
 	left_hashi = (id + 1) % N_PHILOSOPHERS;
 
-	int remaining_sushis;
-	while (remaining_sushis = food_on_table(id))
+	int remaining_sushis = eat_and_return_remaining_sushis_on_table(id);
+	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
+	while (there_are_still_sushis_on_table)
 	{
 		grab_hashi(id, right_hashi, "right");
 		grab_hashi(id, left_hashi, "left");
@@ -68,12 +70,15 @@ void *philosopher(void *num)
 		printf("Philosopher %d: eating.\n", id);
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
 		down_hashis (left_hashi, right_hashi);
+
+		remaining_sushis = eat_and_return_remaining_sushis_on_table(id);
+		there_are_still_sushis_on_table = (remaining_sushis > 0);
 	}
 
 	printf ("Philosopher %d: is done eating.\n", id);
 }
 
-int food_on_table(int philosopher_id)
+int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 {
 	static int remaining_sushis = SUSHIS_ON_PLATE;
 
