@@ -1,3 +1,6 @@
 philosophers
 demo
 demo.c
+
+# VS Code's json files
+.vscode/
