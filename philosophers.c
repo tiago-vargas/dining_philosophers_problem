@@ -11,10 +11,10 @@
 #define DELAY 5000
 #define SUSHIS_ON_PLATE 10
 
-void *philosopher(void *id);
+void *philosopher(void *);
 void grab_hashi(int, int, char *);
 void down_hashis(int, int);
-int eat_and_return_remaining_sushis_on_table(int philosopher_id);
+int eat_and_return_remaining_sushis_on_table(int);
 
 pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
