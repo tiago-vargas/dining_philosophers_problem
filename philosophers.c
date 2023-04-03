@@ -26,22 +26,20 @@ int sleep_seconds = 0;
 
 int main(int argc, char **argv)
 {
-	int i;
-
 	// Serve pra tornar o ato de "pegar os garfos" atômico
 	// Ou seja, ou pega os dois garfos ou não pega nenhum
 	pthread_mutex_init(&food_lock, NULL);
 
 	// Inicializa os hashis
-	for (i = 0; i < N_HASHIS; i++)
+	for (int i = 0; i < N_HASHIS; i++)
 		pthread_mutex_init(&hashis[i], NULL);
 
 	// Inicializa os filósofos
-	for (i = 0; i < N_PHILOSOPHERS; i++)
+	for (int i = 0; i < N_PHILOSOPHERS; i++)
 		pthread_create(&philosophers[i], NULL, philosopher, (void *) i);
 
 	// Certifica que as threads finalizaram a rotina
-	for (i = 0; i < N_PHILOSOPHERS; i++)
+	for (int i = 0; i < N_PHILOSOPHERS; i++)
 		pthread_join(philosophers[i], NULL);
 
 	return 0;
