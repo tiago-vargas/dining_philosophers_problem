@@ -1,4 +1,3 @@
-/* din_philo.c */
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -85,7 +84,7 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 	pthread_mutex_lock(&food_lock);
 
 	// Tá comendo
-	if (remaining_sushis > 0){
+	if (remaining_sushis > 0) {
 		remaining_sushis--;
 		printf("Philosopher %d: get your food, %d remaining sushis.\n", philosopher_id, remaining_sushis);
 	}
