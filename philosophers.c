@@ -51,7 +51,7 @@ void *philosopher(void *num)
 	int left_hashi, right_hashi;
 
 	id = (int) num;
-	printf ("Philosopher %d: is done thinking and now ready to eat.\n", id);
+	printf("Philosopher %d is done thinking and is now ready to eat.\n", id);
 	right_hashi = id;
 	left_hashi = (id + 1) % N_PHILOSOPHERS;
 
@@ -72,7 +72,7 @@ void *philosopher(void *num)
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
 	}
 
-	printf ("Philosopher %d: is done eating.\n", id);
+	printf("Philosopher %d is done eating.\n", id);
 }
 
 int eat_and_return_remaining_sushis_on_table(int philosopher_id)
@@ -84,7 +84,7 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 	// Tá comendo
 	if (remaining_sushis > 0) {
 		remaining_sushis--;
-		printf("Philosopher %d: get your food, %d remaining sushis.\n", philosopher_id, remaining_sushis);
+		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
 	}
 
 	//Caso os biscoitos acabem eu preciso destravar o food_lock
@@ -101,7 +101,7 @@ void grab_hashi(int philosopher_id, int hashi_id, char *side)
 {
 	// side = "left" | "right"
 	pthread_mutex_lock(&hashis[hashi_id]);
-	printf ("Philosopher %d: got %s hashi %d\n", philosopher_id, side, hashi_id);
+	printf("Philosopher %d got %s hashi %d\n", philosopher_id, side, hashi_id);
 }
 
 void down_hashis(int left_hashi, int right_hashi)
