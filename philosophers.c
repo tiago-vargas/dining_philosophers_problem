@@ -12,7 +12,7 @@
 #define SUSHIS_ON_PLATE 10
 
 void *philosopher(void *);
-void grab_hashi(int, int, char *);
+void grab_hashi(int, int);
 void down_hashis(int, int);
 int eat_and_return_remaining_sushis_on_table(int);
 
@@ -59,8 +59,8 @@ void *philosopher(void *num)
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
-		grab_hashi(id, right_hashi, "right");
-		grab_hashi(id, left_hashi, "left");
+		grab_hashi(id, right_hashi);
+		grab_hashi(id, left_hashi);
 
 		pthread_mutex_unlock(&food_lock);
 
@@ -97,9 +97,16 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 	return remaining_sushis;
 }
 
-void grab_hashi(int philosopher_id, int hashi_id, char *side)
+void grab_hashi(int philosopher_id, int hashi_id)
 {
 	// side = "left" | "right"
+	char *side;
+
+	if (hashi_id == philosopher_id)
+		side = "right";
+	else if (hashi_id == philosopher_id + 1)
+		side = "left";
+
 	pthread_mutex_lock(&hashis[hashi_id]);
 	printf("Philosopher %d got %s hashi %d\n", philosopher_id, side, hashi_id);
 }
