@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 	// Ou seja, ou pega os dois garfos ou não pega nenhum
 	pthread_mutex_init(&food_lock, NULL);
 
-	// Inicializa os garfos
+	// Inicializa os hashis
 	for (i = 0; i < N_HASHIS; i++)
 		pthread_mutex_init(&hashis[i], NULL);
 
