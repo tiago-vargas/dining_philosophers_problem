@@ -47,13 +47,11 @@ int main(int argc, char **argv)
 
 void *philosopher(void *num)
 {
-	int id;
-	int left_hashi, right_hashi;
-
-	id = (int) num;
+	int id = (int) num;
 	printf("Philosopher %d is done thinking and is now ready to eat.\n", id);
-	right_hashi = id;
-	left_hashi = (id + 1) % N_PHILOSOPHERS;
+
+	int right_hashi = id;
+	int left_hashi = (id + 1) % N_PHILOSOPHERS;
 
 	int remaining_sushis = eat_and_return_remaining_sushis_on_table(id);
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
