@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <assert.h>
 #include <stdbool.h>
 
 #define N_PHILOSOPHERS 5
