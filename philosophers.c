@@ -6,8 +6,7 @@
 
 #define N_PHILOSOPHERS 5
 #define N_HASHIS 5
-#define DELAY 5000
-#define SUSHIS_ON_PLATE 10
+#define SUSHIS_ON_PLATE 1000
 
 void *philosopher(void *);
 void grab_hashi(int, int);
@@ -63,7 +62,6 @@ void *philosopher(void *num)
 		grab_hashi(id, left_hashi);
 
 		printf("Philosopher %d: eating.\n", id);
-		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
 
 		down_hashis(left_hashi, right_hashi);
 		pthread_mutex_unlock(&sushi_boat);
