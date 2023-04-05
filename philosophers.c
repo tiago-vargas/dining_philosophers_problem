@@ -7,7 +7,7 @@
 #define N_PHILOSOPHERS 5
 #define N_HASHIS 5
 #define DELAY 5000
-#define SUSHIS_ON_PLATE 10
+#define SUSHIS_ON_PLATE 50
 
 void *philosopher(void *);
 void grab_hashi(int, int);
@@ -16,7 +16,6 @@ void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
-pthread_mutex_t sushi_boat;
 int sleep_seconds = 0;
 
 int remaining_sushis = SUSHIS_ON_PLATE;
@@ -26,10 +25,6 @@ int remaining_sushis = SUSHIS_ON_PLATE;
 
 int main(int argc, char **argv)
 {
-	// Serve pra tornar o ato de "pegar os garfos" atômico
-	// Ou seja, ou pega os dois garfos ou não pega nenhum
-	pthread_mutex_init(&sushi_boat, NULL);
-
 	// Inicializa os hashis
 	for (int i = 0; i < N_HASHIS; i++)
 		pthread_mutex_init(&hashis[i], NULL);
@@ -56,17 +51,24 @@ void *philosopher(void *num)
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
-		pthread_mutex_lock(&sushi_boat);
 		eat_sushi_from_boat(id);
 
-		grab_hashi(id, right_hashi);
-		grab_hashi(id, left_hashi);
+		double random_number = rand() / ((double) RAND_MAX);
+		if (random_number > 0.5)
+		{
+			grab_hashi(id, right_hashi);
+			grab_hashi(id, left_hashi);
+		}
+		else
+		{
+			grab_hashi(id, left_hashi);
+			grab_hashi(id, right_hashi);
+		}
 
 		printf("Philosopher %d: eating.\n", id);
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
 
 		down_hashis(left_hashi, right_hashi);
-		pthread_mutex_unlock(&sushi_boat);
 
 		// Prepare for next iteration
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
