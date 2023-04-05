@@ -12,12 +12,14 @@
 void *philosopher(void *);
 void grab_hashi(int, int);
 void down_hashis(int, int);
-int eat_and_return_remaining_sushis_on_table(int);
+void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
 pthread_mutex_t sushi_boat;
 int sleep_seconds = 0;
+
+int remaining_sushis = SUSHIS_ON_PLATE;
 
 // lock: down
 // unlock: up
@@ -51,7 +53,7 @@ void *philosopher(void *num)
 	int right_hashi = id;
 	int left_hashi = (id + 1) % N_PHILOSOPHERS;
 
-	int remaining_sushis = eat_and_return_remaining_sushis_on_table(id);
+	eat_sushi_from_boat(id);
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
@@ -64,17 +66,15 @@ void *philosopher(void *num)
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
 		down_hashis (left_hashi, right_hashi);
 
-		remaining_sushis = eat_and_return_remaining_sushis_on_table(id);
+		eat_sushi_from_boat(id);
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
 	}
 
 	printf("Philosopher %d is done eating.\n", id);
 }
 
-int eat_and_return_remaining_sushis_on_table(int philosopher_id)
+void eat_sushi_from_boat(int philosopher_id)
 {
-	static int remaining_sushis = SUSHIS_ON_PLATE;
-
 	pthread_mutex_lock(&sushi_boat);
 
 	// Tá comendo
@@ -89,8 +89,6 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 	//pois existiria threads que jamais sairiam de sua rotina esperando o unlock
 	if(!remaining_sushis)
 		pthread_mutex_unlock(&sushi_boat);
-
-	return remaining_sushis;
 }
 
 void grab_hashi(int philosopher_id, int hashi_id)
