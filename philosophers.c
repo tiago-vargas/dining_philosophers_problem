@@ -95,9 +95,7 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 
 void grab_hashi(int philosopher_id, int hashi_id)
 {
-	// side = "left" | "right"
 	char *side;
-
 	if (hashi_id == philosopher_id)
 		side = "right";
 	else if (hashi_id == philosopher_id + 1)
