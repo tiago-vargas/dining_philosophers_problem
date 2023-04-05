@@ -60,11 +60,9 @@ void *philosopher(void *num)
 		grab_hashi(id, right_hashi);
 		grab_hashi(id, left_hashi);
 
-		pthread_mutex_unlock(&sushi_boat);
-
 		printf("Philosopher %d: eating.\n", id);
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
-		down_hashis (left_hashi, right_hashi);
+		pthread_mutex_unlock(&sushi_boat);
 
 		eat_sushi_from_boat(id);
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
