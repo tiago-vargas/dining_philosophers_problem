@@ -56,6 +56,7 @@ void *philosopher(void *num)
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
+		pthread_mutex_lock(&sushi_boat);
 		eat_sushi_from_boat(id);
 
 		grab_hashi(id, right_hashi);
@@ -76,8 +77,6 @@ void *philosopher(void *num)
 
 void eat_sushi_from_boat(int philosopher_id)
 {
-	pthread_mutex_lock(&sushi_boat);
-
 	// Tá comendo
 	if (remaining_sushis > 0) {
 		remaining_sushis--;
