@@ -53,18 +53,22 @@ void *philosopher(void *num)
 	int right_hashi = id;
 	int left_hashi = (id + 1) % N_PHILOSOPHERS;
 
-	eat_sushi_from_boat(id);
+	// eat_sushi_from_boat(id);
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
+		eat_sushi_from_boat(id);
+
 		grab_hashi(id, right_hashi);
 		grab_hashi(id, left_hashi);
 
 		printf("Philosopher %d: eating.\n", id);
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
+
+		down_hashis(left_hashi, right_hashi);
 		pthread_mutex_unlock(&sushi_boat);
 
-		eat_sushi_from_boat(id);
+		// Prepare for next iteration
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
 	}
 
