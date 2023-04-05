@@ -54,10 +54,11 @@ void *philosopher(void *num)
 	while (there_are_still_sushis_on_table)
 	{
 		pthread_mutex_lock(&sushi_boat);
-		eat_sushi_from_boat(id);
 
 		grab_hashi(id, right_hashi);
 		grab_hashi(id, left_hashi);
+
+		eat_sushi_from_boat(id);
 
 		printf("Philosopher %d: eating.\n", id);
 
