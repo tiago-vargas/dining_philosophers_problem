@@ -53,7 +53,6 @@ void *philosopher(void *num)
 	int right_hashi = id;
 	int left_hashi = (id + 1) % N_PHILOSOPHERS;
 
-	// eat_sushi_from_boat(id);
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
@@ -84,13 +83,6 @@ void eat_sushi_from_boat(int philosopher_id)
 		remaining_sushis--;
 		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
 	}
-
-	//Caso os biscoitos acabem eu preciso destravar o sushi_boat
-	//Do contrário, os filósofos que estavam na fila pra tentar comer jamais entrariam
-	//no while para dar unlock (em philosopher()), assim a execução entraria em deadlock
-	//pois existiria threads que jamais sairiam de sua rotina esperando o unlock
-	if(!remaining_sushis)
-		pthread_mutex_unlock(&sushi_boat);
 }
 
 void grab_hashi(int philosopher_id, int hashi_id)
