@@ -16,7 +16,7 @@ int eat_and_return_remaining_sushis_on_table(int);
 
 pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
-pthread_mutex_t food_lock;
+pthread_mutex_t sushi_boat;
 int sleep_seconds = 0;
 
 // lock: down
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 {
 	// Serve pra tornar o ato de "pegar os garfos" atômico
 	// Ou seja, ou pega os dois garfos ou não pega nenhum
-	pthread_mutex_init(&food_lock, NULL);
+	pthread_mutex_init(&sushi_boat, NULL);
 
 	// Inicializa os hashis
 	for (int i = 0; i < N_HASHIS; i++)
@@ -58,7 +58,7 @@ void *philosopher(void *num)
 		grab_hashi(id, right_hashi);
 		grab_hashi(id, left_hashi);
 
-		pthread_mutex_unlock(&food_lock);
+		pthread_mutex_unlock(&sushi_boat);
 
 		printf("Philosopher %d: eating.\n", id);
 		usleep (DELAY * (SUSHIS_ON_PLATE - remaining_sushis + 1));
@@ -75,7 +75,7 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 {
 	static int remaining_sushis = SUSHIS_ON_PLATE;
 
-	pthread_mutex_lock(&food_lock);
+	pthread_mutex_lock(&sushi_boat);
 
 	// Tá comendo
 	if (remaining_sushis > 0) {
@@ -83,12 +83,12 @@ int eat_and_return_remaining_sushis_on_table(int philosopher_id)
 		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
 	}
 
-	//Caso os biscoitos acabem eu preciso destravar o food_lock
+	//Caso os biscoitos acabem eu preciso destravar o sushi_boat
 	//Do contrário, os filósofos que estavam na fila pra tentar comer jamais entrariam
 	//no while para dar unlock (em philosopher()), assim a execução entraria em deadlock
 	//pois existiria threads que jamais sairiam de sua rotina esperando o unlock
 	if(!remaining_sushis)
-		pthread_mutex_unlock(&food_lock);
+		pthread_mutex_unlock(&sushi_boat);
 
 	return remaining_sushis;
 }
