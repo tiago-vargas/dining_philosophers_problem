@@ -1,7 +1,5 @@
 #include <pthread.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdbool.h>
 
 #define N_PHILOSOPHERS 5
