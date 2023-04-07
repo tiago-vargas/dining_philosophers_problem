@@ -8,7 +8,7 @@
 
 void *philosopher(void *);
 void grab_hashi(int, int);
-void down_hashis(int, int);
+void drop_hashis(int, int);
 void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
@@ -71,7 +71,7 @@ void *philosopher(void *num)
 
 		printf("Philosopher %d: eating.\n", id);
 
-		down_hashis(left_hashi, right_hashi);
+		drop_hashis(left_hashi, right_hashi);
 		pthread_mutex_unlock(&sushi_boat);
 
 		// Prepare for next iteration
@@ -102,7 +102,7 @@ void grab_hashi(int philosopher_id, int hashi_id)
 	printf("Philosopher %d got %s hashi %d\n", philosopher_id, side, hashi_id);
 }
 
-void down_hashis(int left_hashi, int right_hashi)
+void drop_hashis(int left_hashi, int right_hashi)
 {
 	pthread_mutex_unlock(&hashis[left_hashi]);
 	pthread_mutex_unlock(&hashis[right_hashi]);
