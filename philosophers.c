@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 
 	// Inicializa os filósofos
 	for (int i = 0; i < N_PHILOSOPHERS; i++)
-		pthread_create(&philosophers[i], NULL, philosopher, (void *) i);
+		pthread_create(&philosophers[i], NULL, philosopher, (void *) (__intptr_t) i);
 
 	// Certifica que as threads finalizaram a rotina
 	for (int i = 0; i < N_PHILOSOPHERS; i++)
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 
 void *philosopher(void *num)
 {
-	int id = (int) num;
+	int id = (__intptr_t) num;
 	printf("Philosopher %d is done thinking and is now ready to eat.\n", id);
 
 	int right_hashi = id;
