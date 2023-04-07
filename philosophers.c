@@ -18,8 +18,17 @@ int sleep_seconds = 0;
 
 int remaining_sushis = SUSHIS_ON_PLATE;
 
-// lock: down
-// unlock: up
+/**
+ * There'll be a central source of sushis: the sushi boat.
+ *
+ * Philosophers will pull the boat close to themselves, so they can grab a piece
+ * of sushi with their hashis, and then push the boat to the center of the table
+ * when they're done.
+ *
+ * Due to this mechanic, only one philosopher can eat at a time, and also only
+ * one philospher will grab their hashis at a time.
+*/
+
 
 int main(int argc, char **argv)
 {
