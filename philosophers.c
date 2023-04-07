@@ -99,8 +99,8 @@ void *philosopher(void *num)
 
 void eat_sushi_from_boat(int philosopher_id)
 {
-	// Tá comendo
-	if (remaining_sushis > 0) {
+	if (remaining_sushis > 0)
+	{
 		remaining_sushis--;
 		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
 	}
