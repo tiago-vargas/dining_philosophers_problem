@@ -29,26 +29,39 @@ int remaining_sushis = SUSHIS_ON_PLATE;
  * one philospher will grab their hashis at a time.
 */
 
+void initialize_mutexes();
+void create_philosopher_threads();
+void wait_for_philosophers_to_finish_executing();
 
 int main(int argc, char **argv)
 {
-	// Serve pra tornar o ato de "pegar os garfos" atômico
-	// Ou seja, ou pega os dois garfos ou não pega nenhum
-	pthread_mutex_init(&sushi_boat, NULL);
+	initialize_mutexes();
 
-	// Inicializa os hashis
-	for (int i = 0; i < N_HASHIS; i++)
-		pthread_mutex_init(&hashis[i], NULL);
+	create_philosopher_threads();
 
-	// Inicializa os filósofos
-	for (int i = 0; i < N_PHILOSOPHERS; i++)
-		pthread_create(&philosophers[i], NULL, philosopher, (void *) (__intptr_t) i);
-
-	// Certifica que as threads finalizaram a rotina
-	for (int i = 0; i < N_PHILOSOPHERS; i++)
-		pthread_join(philosophers[i], NULL);
+	wait_for_philosophers_to_finish_executing();
 
 	return 0;
+}
+
+void initialize_mutexes()
+{
+	pthread_mutex_init(&sushi_boat, NULL);
+
+	for (int i = 0; i < N_HASHIS; i++)
+		pthread_mutex_init(&hashis[i], NULL);
+}
+
+void create_philosopher_threads()
+{
+	for (int i = 0; i < N_PHILOSOPHERS; i++)
+		pthread_create(&philosophers[i], NULL, philosopher, (void *) (__intptr_t) i);
+}
+
+void wait_for_philosophers_to_finish_executing()
+{
+	for (int i = 0; i < N_PHILOSOPHERS; i++)
+		pthread_join(philosophers[i], NULL);
 }
 
 void *philosopher(void *num)
