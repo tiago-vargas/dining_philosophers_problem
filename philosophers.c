@@ -75,6 +75,7 @@ void *philosopher(void *num)
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
+		// Pulls the boat
 		pthread_mutex_lock(&sushi_boat);
 
 		grab_hashi(id, right_hashi);
@@ -85,6 +86,8 @@ void *philosopher(void *num)
 		printf("Philosopher %d: eating.\n", id);
 
 		drop_hashis(left_hashi, right_hashi);
+
+		// Pushes the boat
 		pthread_mutex_unlock(&sushi_boat);
 
 		// Prepare for next iteration
