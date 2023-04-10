@@ -4,7 +4,7 @@
 
 #define N_PHILOSOPHERS 5
 #define N_HASHIS 5
-#define SUSHIS_ON_PLATE 1000
+#define SUSHIS_ON_PLATE 10000
 
 void *philosopher(void *);
 void grab_hashi(int, int);
