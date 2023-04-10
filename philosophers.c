@@ -7,6 +7,7 @@
 #define SUSHIS_ON_PLATE 10000
 
 void *philosopher(void *);
+void grab_hashis(int, int, int);
 void grab_hashi(int, int);
 void drop_hashis(int, int);
 void eat_sushi_from_boat(int);
@@ -83,8 +84,7 @@ void *philosopher(void *num)
 		// Pulls the boat
 		pthread_mutex_lock(&sushi_boat);
 
-		grab_hashi(id, right_hashi);
-		grab_hashi(id, left_hashi);
+		grab_hashis(id, left_hashi, right_hashi);
 
 		eat_sushi_from_boat(id);
 
@@ -112,6 +112,12 @@ void eat_sushi_from_boat(int philosopher_id)
 		// For reporting purposes
 		++pieces_of_sushi_eaten_by_philosophers[philosopher_id];
 	}
+}
+
+void grab_hashis(int philosopher_id, int left_hashi, int right_hashi)
+{
+	grab_hashi(philosopher_id, left_hashi);
+	grab_hashi(philosopher_id, right_hashi);
 }
 
 void grab_hashi(int philosopher_id, int hashi_id)
