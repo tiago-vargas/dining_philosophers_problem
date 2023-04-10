@@ -16,6 +16,8 @@ pthread_t philosophers[N_PHILOSOPHERS];
 pthread_mutex_t sushi_boat;
 int sleep_seconds = 0;
 
+int pieces_of_sushi_eaten_by_philosophers[N_PHILOSOPHERS];
+
 int remaining_sushis = SUSHIS_ON_PLATE;
 
 /**
@@ -32,6 +34,7 @@ int remaining_sushis = SUSHIS_ON_PLATE;
 void initialize_mutexes();
 void create_philosopher_threads();
 void wait_for_philosophers_to_finish_executing();
+void print_report(int [], int);
 
 int main(int argc, char **argv)
 {
@@ -40,6 +43,8 @@ int main(int argc, char **argv)
 	create_philosopher_threads();
 
 	wait_for_philosophers_to_finish_executing();
+
+	print_report(pieces_of_sushi_eaten_by_philosophers, N_PHILOSOPHERS);
 
 	return 0;
 }
@@ -103,6 +108,9 @@ void eat_sushi_from_boat(int philosopher_id)
 	{
 		remaining_sushis--;
 		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
+
+		// For reporting purposes
+		++pieces_of_sushi_eaten_by_philosophers[philosopher_id];
 	}
 }
 
@@ -122,4 +130,12 @@ void drop_hashis(int left_hashi, int right_hashi)
 {
 	pthread_mutex_unlock(&hashis[left_hashi]);
 	pthread_mutex_unlock(&hashis[right_hashi]);
+}
+
+void print_report(int pieces_of_sushi_eaten_by_philosophers[], int length)
+{
+	printf("-- Report --" "\n");
+
+	for (int i = 0; i < length; i++)
+		printf("Philosopher %d ate %d pieces of sushi.\n", i, pieces_of_sushi_eaten_by_philosophers[i]);
 }
