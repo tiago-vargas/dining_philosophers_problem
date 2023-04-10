@@ -72,7 +72,7 @@ void wait_for_philosophers_to_finish_executing()
 void *philosopher(void *num)
 {
 	int id = (__intptr_t) num;
-	printf("Philosopher %d is done thinking and is now ready to eat.\n", id);
+	printf("Philosopher %d is done thinking and is now ready to eat." "\n", id);
 
 	int right_hashi = id;
 	int left_hashi = (id + 1) % N_PHILOSOPHERS;
@@ -88,7 +88,7 @@ void *philosopher(void *num)
 
 		eat_sushi_from_boat(id);
 
-		printf("Philosopher %d: eating.\n", id);
+		printf("Philosopher %d is eating." "\n", id);
 
 		drop_hashis(left_hashi, right_hashi);
 
@@ -99,7 +99,7 @@ void *philosopher(void *num)
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
 	}
 
-	printf("Philosopher %d is done eating.\n", id);
+	printf("Philosopher %d is done eating." "\n", id);
 }
 
 void eat_sushi_from_boat(int philosopher_id)
@@ -107,7 +107,7 @@ void eat_sushi_from_boat(int philosopher_id)
 	if (remaining_sushis > 0)
 	{
 		remaining_sushis--;
-		printf("Philosopher %d ate their sushi; %d remaining sushis.\n", philosopher_id, remaining_sushis);
+		printf("Philosopher %d ate their sushi; %d remaining sushis." "\n", philosopher_id, remaining_sushis);
 
 		// For reporting purposes
 		++pieces_of_sushi_eaten_by_philosophers[philosopher_id];
@@ -123,7 +123,7 @@ void grab_hashi(int philosopher_id, int hashi_id)
 		side = "left";
 
 	pthread_mutex_lock(&hashis[hashi_id]);
-	printf("Philosopher %d got %s hashi %d\n", philosopher_id, side, hashi_id);
+	printf("Philosopher %d got %s hashi %d." "\n", philosopher_id, side, hashi_id);
 }
 
 void drop_hashis(int left_hashi, int right_hashi)
@@ -137,5 +137,5 @@ void print_report(int pieces_of_sushi_eaten_by_philosophers[], int length)
 	printf("-- Report --" "\n");
 
 	for (int i = 0; i < length; i++)
-		printf("Philosopher %d ate %d pieces of sushi.\n", i, pieces_of_sushi_eaten_by_philosophers[i]);
+		printf("Philosopher %d ate %d pieces of sushi." "\n", i, pieces_of_sushi_eaten_by_philosophers[i]);
 }
