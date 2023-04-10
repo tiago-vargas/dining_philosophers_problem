@@ -86,8 +86,6 @@ void *philosopher(void *num)
 		grab_hashi(id, right_hashi);
 		grab_hashi(id, left_hashi);
 
-		printf("Philosopher %d is eating." "\n", id);
-
 		eat_sushi_from_boat(id);
 
 		drop_hashis(left_hashi, right_hashi);
@@ -104,6 +102,8 @@ void *philosopher(void *num)
 
 void eat_sushi_from_boat(int philosopher_id)
 {
+	printf("Philosopher %d is eating." "\n", philosopher_id);
+
 	if (remaining_sushis > 0)
 	{
 		remaining_sushis--;
