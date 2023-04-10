@@ -10,6 +10,7 @@ void *philosopher(void *);
 void grab_both_hashis(int);
 void grab_hashi(int, int);
 void drop_both_hashis(int);
+void drop_hashi(int, int);
 void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
@@ -133,8 +134,20 @@ void drop_both_hashis(int philosopher_id)
 {
 	int right_hashi = philosopher_id;
 	int left_hashi = (philosopher_id + 1) % N_PHILOSOPHERS;
-	pthread_mutex_unlock(&hashis[left_hashi]);
-	pthread_mutex_unlock(&hashis[right_hashi]);
+	drop_hashi(philosopher_id, left_hashi);
+	drop_hashi(philosopher_id, right_hashi);
+}
+
+void drop_hashi(int philosopher_id, int hashi_id)
+{
+	char *side;
+	if (hashi_id == philosopher_id)
+		side = "right";
+	else if (hashi_id == philosopher_id + 1)
+		side = "left";
+
+	pthread_mutex_unlock(&hashis[hashi_id]);
+	printf("Philosopher %d dropped %s hashi %d." "\n", philosopher_id, side, hashi_id);
 }
 
 void print_report(int pieces_of_sushi_eaten_by_philosophers[], int length)
