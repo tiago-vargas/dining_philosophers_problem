@@ -7,9 +7,9 @@
 #define SUSHIS_ON_PLATE 10000
 
 void *philosopher(void *);
-void grab_hashis(int, int, int);
+void grab_both_hashis(int);
 void grab_hashi(int, int);
-void drop_hashis(int, int);
+void drop_both_hashis(int);
 void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
@@ -75,20 +75,15 @@ void *philosopher(void *num)
 	int id = (__intptr_t) num;
 	printf("Philosopher %d is done thinking and is now ready to eat." "\n", id);
 
-	int right_hashi = id;
-	int left_hashi = (id + 1) % N_PHILOSOPHERS;
-
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
 		// Pulls the boat
 		pthread_mutex_lock(&sushi_boat);
 
-		grab_hashis(id, left_hashi, right_hashi);
-
+		grab_both_hashis(id);
 		eat_sushi_from_boat(id);
-
-		drop_hashis(left_hashi, right_hashi);
+		drop_both_hashis(id);
 
 		// Pushes the boat
 		pthread_mutex_unlock(&sushi_boat);
@@ -114,8 +109,10 @@ void eat_sushi_from_boat(int philosopher_id)
 	}
 }
 
-void grab_hashis(int philosopher_id, int left_hashi, int right_hashi)
+void grab_both_hashis(int philosopher_id)
 {
+	int right_hashi = philosopher_id;
+	int left_hashi = (philosopher_id + 1) % N_PHILOSOPHERS;
 	grab_hashi(philosopher_id, left_hashi);
 	grab_hashi(philosopher_id, right_hashi);
 }
@@ -132,8 +129,10 @@ void grab_hashi(int philosopher_id, int hashi_id)
 	printf("Philosopher %d got %s hashi %d." "\n", philosopher_id, side, hashi_id);
 }
 
-void drop_hashis(int left_hashi, int right_hashi)
+void drop_both_hashis(int philosopher_id)
 {
+	int right_hashi = philosopher_id;
+	int left_hashi = (philosopher_id + 1) % N_PHILOSOPHERS;
 	pthread_mutex_unlock(&hashis[left_hashi]);
 	pthread_mutex_unlock(&hashis[right_hashi]);
 }
