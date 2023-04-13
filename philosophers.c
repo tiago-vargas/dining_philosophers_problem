@@ -15,23 +15,11 @@ void eat_sushi_from_boat(int);
 
 pthread_mutex_t hashis[N_HASHIS];
 pthread_t philosophers[N_PHILOSOPHERS];
-pthread_mutex_t sushi_boat;
 int sleep_seconds = 0;
 
 int pieces_of_sushi_eaten_by_philosophers[N_PHILOSOPHERS];
 
 int remaining_sushis = SUSHIS_ON_PLATE;
-
-/**
- * There'll be a central source of sushis: the sushi boat.
- *
- * Philosophers will pull the boat close to themselves, so they can grab a piece
- * of sushi with their hashis, and then push the boat to the center of the table
- * when they're done.
- *
- * Due to this mechanic, only one philosopher can eat at a time, and also only
- * one philospher will grab their hashis at a time.
-*/
 
 void initialize_mutexes();
 void create_philosopher_threads();
@@ -53,8 +41,6 @@ int main(int argc, char **argv)
 
 void initialize_mutexes()
 {
-	pthread_mutex_init(&sushi_boat, NULL);
-
 	for (int i = 0; i < N_HASHIS; i++)
 		pthread_mutex_init(&hashis[i], NULL);
 }
@@ -79,15 +65,9 @@ void *philosopher(void *num)
 	bool there_are_still_sushis_on_table = (remaining_sushis > 0);
 	while (there_are_still_sushis_on_table)
 	{
-		// Pulls the boat
-		pthread_mutex_lock(&sushi_boat);
-
 		grab_both_hashis(id);
 		eat_sushi_from_boat(id);
 		drop_both_hashis(id);
-
-		// Pushes the boat
-		pthread_mutex_unlock(&sushi_boat);
 
 		// Prepare for next iteration
 		there_are_still_sushis_on_table = (remaining_sushis > 0);
@@ -114,8 +94,17 @@ void grab_both_hashis(int philosopher_id)
 {
 	int right_hashi = philosopher_id;
 	int left_hashi = (philosopher_id + 1) % N_PHILOSOPHERS;
-	grab_hashi(philosopher_id, left_hashi);
-	grab_hashi(philosopher_id, right_hashi);
+
+	if (philosopher_id == 0)
+	{
+		grab_hashi(philosopher_id, right_hashi);
+		grab_hashi(philosopher_id, left_hashi);
+	}
+	else
+	{
+		grab_hashi(philosopher_id, left_hashi);
+		grab_hashi(philosopher_id, right_hashi);
+	}
 }
 
 void grab_hashi(int philosopher_id, int hashi_id)
